@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>قائمة الطعام | نكهة السيريه</title>
-<meta name="description" content="قائمة طعام مطعم نكهة السيريه في جدة وجازان. اختر أصنافك وأرسل الطلب عبر واتساب للفرع.">
+<meta name="description" content="قائمة طعام مطعم نكهة السيريه في جدة. اختر أصنافك وأرسل الطلب عبر واتساب للفرع.">
 <meta name="theme-color" content="#ffffff">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -54,14 +54,6 @@ button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
 .brand-en{font-size:.72rem;letter-spacing:.22em;color:var(--clay);margin-top:2px;direction:ltr}
 .hero h1{font-family:var(--font-display);font-weight:500;font-size:clamp(1.7rem,6vw,2.3rem);margin-top:26px}
 .hero p{color:var(--muted);margin-top:6px;font-size:.98rem}
-.branch-chip{
-  margin-top:18px;display:inline-flex;align-items:center;gap:8px;
-  border:1px solid var(--line);border-radius:999px;padding:8px 16px;font-size:.95rem;
-  background:rgba(255,250,243,.85);
-}
-.branch-chip b{color:var(--clay);font-weight:700}
-.branch-chip:hover{border-color:var(--clay)}
-
 /* ---------- Category nav ---------- */
 .cats{
   position:sticky;top:0;z-index:20;
@@ -163,13 +155,6 @@ footer{
 @keyframes rise{from{transform:translateY(40px);opacity:0}to{transform:none;opacity:1}}
 .sheet h3{font-family:var(--font-display);font-size:1.4rem;font-weight:700;margin-bottom:4px}
 .sheet .sub{color:var(--muted);font-size:.93rem;margin-bottom:16px}
-.branch-opt{
-  display:block;width:100%;text-align:right;border:1px solid var(--line);border-radius:var(--radius);
-  padding:14px 16px;margin-bottom:10px;background:var(--bg);transition:.15s;
-}
-.branch-opt:hover,.branch-opt.sel{border-color:var(--clay)}
-.branch-opt strong{display:block;font-family:var(--font-display);font-size:1.2rem;font-weight:500}
-.branch-opt span{color:var(--muted);font-size:.9rem}
 
 .cart-line{display:grid;grid-template-columns:1fr auto;gap:4px 12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}
 .cart-line .n{font-weight:700}
@@ -199,11 +184,8 @@ footer{
 
 
 /* ---------- White theme: logo colors used lightly ---------- */
-body{background:linear-gradient(#fbf7f0 0,#ffffff 360px);background-color:#fff}
 .brand-en{color:var(--clay-text)}
-.branch-chip{background:#fff;border-color:var(--line)}
-.branch-chip b{color:var(--clay-text)}
-.branch-chip:hover{border-color:var(--clay)}
+body{background:linear-gradient(#fbf7f0 0,#ffffff 360px);background-color:#fff}
 .cats{background:rgba(255,255,255,.94)}
 .cat-btn{border-color:var(--line)}
 .cat-btn.active{background:var(--sand);border-color:var(--clay);color:var(--brown);font-weight:700}
@@ -221,8 +203,6 @@ body{background:linear-gradient(#fbf7f0 0,#ffffff 360px);background-color:#fff}
 .cart-bar button{background:var(--brown);color:#fff;box-shadow:0 8px 24px rgba(93,59,41,.28)}
 .cart-bar .count{background:var(--clay);color:#fff}
 .sheet{background:#fff}
-.branch-opt{background:#fff}
-.branch-opt:hover,.branch-opt.sel{border-color:var(--clay);background:var(--surface-2)}
 .total .v{color:var(--clay-text)}
 .mini button{color:var(--clay-text)}
 .note-branch b{color:var(--clay-text)}
@@ -261,10 +241,7 @@ footer{border-top-color:var(--line)}
   <div class="brand-en">SERIHA FLAVOR RESTAURANT</div>
   <h1>قائمة الطعام</h1>
   <p>اختر أصنافك وأرسل الطلب مباشرة إلى الفرع عبر واتساب</p>
-  <button class="branch-chip" id="branchChip" type="button" aria-label="تغيير الفرع">
-    الفرع: <b id="branchChipName">اختر الفرع</b>
-  </button>
-</header>
+  </header>
 
 <nav class="cats" aria-label="أقسام القائمة">
   <div class="cats-inner" id="catNav"></div>
@@ -286,15 +263,6 @@ footer{border-top-color:var(--line)}
     <span>عرض السلة <span class="count" id="cartCount">0</span></span>
     <span id="cartTotalBar">0 ر.س</span>
   </button>
-</div>
-
-<!-- Branch picker -->
-<div class="overlay" id="branchOverlay" role="dialog" aria-modal="true" aria-labelledby="bt">
-  <div class="sheet">
-    <h3 id="bt">اختر الفرع</h3>
-    <p class="sub">يصل طلبك على واتساب الفرع الذي تختاره.</p>
-    <div id="branchOptions"></div>
-  </div>
 </div>
 
 <!-- Cart -->
@@ -337,13 +305,6 @@ const BRANCHES = [
     address: "حي التيسير | شارع حي بن ثعلبة",
     phoneDisplay: "0548606265",
     whatsapp: "966548606265"
-  },
-  {
-    id: "jazan",
-    name: "جازان",
-    address: "البلد - حي الشامية",
-    phoneDisplay: "0535483854",
-    whatsapp: "966535483854"
   }
 ];
 
@@ -383,11 +344,7 @@ const ALL = MENU.flatMap(c => c.items);
 const byId = Object.fromEntries(ALL.map(i => [i.id, i]));
 
 let cart = {};
-let branchId = null;
-try { branchId = localStorage.getItem("seriha_branch"); } catch(e){}
-if (!BRANCHES.some(b => b.id === branchId)) branchId = null;
-
-const branch = () => BRANCHES.find(b => b.id === branchId);
+const branch = () => BRANCHES[0];
 const fmt = (n) => `${n} ${CURRENCY}`;
 const totals = () => {
   let count = 0, sum = 0;
@@ -477,24 +434,9 @@ function renderCart(){
 function openSheet(el){ el.classList.add("open"); document.body.style.overflow = "hidden"; }
 function closeSheet(el){ el.classList.remove("open"); if(!document.querySelector(".overlay.open")) document.body.style.overflow = ""; }
 
-function renderBranchOptions(){
-  $("#branchOptions").innerHTML = BRANCHES.map(b => `
-    <button class="branch-opt${b.id===branchId?" sel":""}" type="button" data-branch="${b.id}">
-      <strong>فرع ${b.name}</strong><span>${b.address}</span>
-    </button>`).join("");
-}
-function setBranch(id){
-  branchId = id;
-  try { localStorage.setItem("seriha_branch", id); } catch(e){}
-  $("#branchChipName").textContent = branch().name;
-  closeSheet($("#branchOverlay"));
-  if ($("#cartOverlay").classList.contains("open")) renderCart();
-}
-
 /* ---- WhatsApp ---- */
 function sendOrder(){
   const b = branch();
-  if (!b) { renderBranchOptions(); openSheet($("#branchOverlay")); return; }
   const { sum } = totals();
   const name = $("#custName").value.trim();
   const note = $("#custNote").value.trim();
@@ -531,26 +473,22 @@ document.addEventListener("click", (e) => {
     change(id, t.dataset.act === "inc" ? 1 : -1);
   } else if (t.dataset.cart) {
     change(t.dataset.cart, Number(t.dataset.d));
-  } else if (t.dataset.branch) {
-    setBranch(t.dataset.branch);
   } else if (t.dataset.target) {
     document.getElementById(t.dataset.target).scrollIntoView({ behavior: "smooth" });
   }
 });
 
-$("#branchChip").addEventListener("click", () => { renderBranchOptions(); openSheet($("#branchOverlay")); });
 $("#openCart").addEventListener("click", () => {
-  if (!branch()) { renderBranchOptions(); openSheet($("#branchOverlay")); return; }
   renderCart(); openSheet($("#cartOverlay"));
 });
 $("#closeCart").addEventListener("click", () => closeSheet($("#cartOverlay")));
 $("#clearBtn").addEventListener("click", () => { cart = {}; sync(); renderCart(); });
 $("#sendBtn").addEventListener("click", sendOrder);
 document.querySelectorAll(".overlay").forEach(o => o.addEventListener("click", (e) => {
-  if (e.target === o && (o.id === "cartOverlay" || branch())) closeSheet(o);
+  if (e.target === o) closeSheet(o);
 }));
 document.addEventListener("keydown", (e) => {
-  if (e.key === "Escape") document.querySelectorAll(".overlay.open").forEach(o => { if (o.id === "cartOverlay" || branch()) closeSheet(o); });
+  if (e.key === "Escape") document.querySelectorAll(".overlay.open").forEach(o => { closeSheet(o); });
 });
 
 /* highlight active category while scrolling (بدون التأثير على سكرول الصفحة) */
@@ -578,8 +516,6 @@ const io = new IntersectionObserver((entries) => {
 /* init */
 renderMenu();
 document.querySelectorAll(".section").forEach(s => io.observe(s));
-if (branch()) $("#branchChipName").textContent = branch().name;
-else { renderBranchOptions(); openSheet($("#branchOverlay")); }
 sync();
 </script>
 </body>
