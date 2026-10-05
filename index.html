@@ -32,7 +32,7 @@
   --font-body:"IBM Plex Sans Arabic",system-ui,sans-serif;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+html{-webkit-text-size-adjust:100%}
 body{
   font-family:var(--font-body);
   background:var(--bg);
@@ -65,7 +65,7 @@ button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
 /* ---------- Category nav ---------- */
 .cats{
   position:sticky;top:0;z-index:20;
-  background:rgba(247,240,230,.92);backdrop-filter:blur(8px);
+  background:#f7f0e6;
   border-block:1px solid var(--line);
 }
 .cats-inner{
@@ -155,7 +155,7 @@ footer{
 }
 .overlay.open{display:flex}
 .sheet{
-  width:100%;max-width:560px;max-height:92vh;overflow-y:auto;
+  width:100%;max-width:560px;max-height:92vh;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;
   background:var(--surface);border:1px solid var(--line);border-bottom:0;
   border-radius:20px 20px 0 0;padding:22px 20px calc(22px + env(safe-area-inset-bottom));
   animation:rise .25s ease;
@@ -474,8 +474,8 @@ function renderCart(){
 }
 
 /* ---- overlays ---- */
-function open(el){ el.classList.add("open"); document.body.style.overflow = "hidden"; }
-function close(el){ el.classList.remove("open"); if(!document.querySelector(".overlay.open")) document.body.style.overflow = ""; }
+function openSheet(el){ el.classList.add("open"); document.body.style.overflow = "hidden"; }
+function closeSheet(el){ el.classList.remove("open"); if(!document.querySelector(".overlay.open")) document.body.style.overflow = ""; }
 
 function renderBranchOptions(){
   $("#branchOptions").innerHTML = BRANCHES.map(b => `
@@ -487,14 +487,14 @@ function setBranch(id){
   branchId = id;
   try { localStorage.setItem("seriha_branch", id); } catch(e){}
   $("#branchChipName").textContent = branch().name;
-  close($("#branchOverlay"));
+  closeSheet($("#branchOverlay"));
   if ($("#cartOverlay").classList.contains("open")) renderCart();
 }
 
 /* ---- WhatsApp ---- */
 function sendOrder(){
   const b = branch();
-  if (!b) { renderBranchOptions(); open($("#branchOverlay")); return; }
+  if (!b) { renderBranchOptions(); openSheet($("#branchOverlay")); return; }
   const { sum } = totals();
   const name = $("#custName").value.trim();
   const note = $("#custNote").value.trim();
@@ -515,7 +515,10 @@ function sendOrder(){
     note ? `\nملاحظات: ${note}` : null
   ].filter(x => x !== null).join("\n");
 
-  window.open(`https://wa.me/${b.whatsapp}?text=${encodeURIComponent(msg)}`, "_blank", "noopener");
+  const url = `https://wa.me/${b.whatsapp}?text=${encodeURIComponent(msg)}`;
+  const a = document.createElement("a");
+  a.href = url; a.target = "_blank"; a.rel = "noopener noreferrer";
+  document.body.appendChild(a); a.click(); a.remove();
 }
 
 /* ---- events ---- */
@@ -535,37 +538,48 @@ document.addEventListener("click", (e) => {
   }
 });
 
-$("#branchChip").addEventListener("click", () => { renderBranchOptions(); open($("#branchOverlay")); });
+$("#branchChip").addEventListener("click", () => { renderBranchOptions(); openSheet($("#branchOverlay")); });
 $("#openCart").addEventListener("click", () => {
-  if (!branch()) { renderBranchOptions(); open($("#branchOverlay")); return; }
-  renderCart(); open($("#cartOverlay"));
+  if (!branch()) { renderBranchOptions(); openSheet($("#branchOverlay")); return; }
+  renderCart(); openSheet($("#cartOverlay"));
 });
-$("#closeCart").addEventListener("click", () => close($("#cartOverlay")));
+$("#closeCart").addEventListener("click", () => closeSheet($("#cartOverlay")));
 $("#clearBtn").addEventListener("click", () => { cart = {}; sync(); renderCart(); });
 $("#sendBtn").addEventListener("click", sendOrder);
 document.querySelectorAll(".overlay").forEach(o => o.addEventListener("click", (e) => {
-  if (e.target === o && (o.id === "cartOverlay" || branch())) close(o);
+  if (e.target === o && (o.id === "cartOverlay" || branch())) closeSheet(o);
 }));
 document.addEventListener("keydown", (e) => {
-  if (e.key === "Escape") document.querySelectorAll(".overlay.open").forEach(o => { if (o.id === "cartOverlay" || branch()) close(o); });
+  if (e.key === "Escape") document.querySelectorAll(".overlay.open").forEach(o => { if (o.id === "cartOverlay" || branch()) closeSheet(o); });
 });
 
-/* highlight active category while scrolling */
-const io = new IntersectionObserver((entries) => {
-  entries.forEach(en => {
-    if (en.isIntersecting) {
-      document.querySelectorAll(".cat-btn").forEach(b => b.classList.toggle("active", b.dataset.target === en.target.id));
-      const a = document.querySelector(".cat-btn.active");
-      if (a) a.scrollIntoView({ inline: "center", block: "nearest" });
-    }
+/* highlight active category while scrolling (بدون التأثير على سكرول الصفحة) */
+let activeSec = null;
+const navEl = () => document.querySelector(".cats-inner");
+function setActive(id){
+  if (id === activeSec) return;
+  activeSec = id;
+  let activeBtn = null;
+  document.querySelectorAll(".cat-btn").forEach(b => {
+    const on = b.dataset.target === id;
+    b.classList.toggle("active", on);
+    if (on) activeBtn = b;
   });
+  const nav = navEl();
+  if (activeBtn && nav) {
+    const target = activeBtn.offsetLeft - (nav.clientWidth - activeBtn.offsetWidth) / 2;
+    nav.scrollTo({ left: target, behavior: "auto" });
+  }
+}
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(en => { if (en.isIntersecting) setActive(en.target.id); });
 }, { rootMargin: "-30% 0px -60% 0px" });
 
 /* init */
 renderMenu();
 document.querySelectorAll(".section").forEach(s => io.observe(s));
 if (branch()) $("#branchChipName").textContent = branch().name;
-else { renderBranchOptions(); open($("#branchOverlay")); }
+else { renderBranchOptions(); openSheet($("#branchOverlay")); }
 sync();
 </script>
 </body>
