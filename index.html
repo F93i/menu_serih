@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>قائمة الطعام | نكهة السيريه</title>
+<meta name="description" content="قائمة طعام مطعم نكهة السيريه في جدة وجازان. اختر أصنافك وأرسل الطلب عبر واتساب للفرع.">
+<meta name="theme-color" content="#ffffff">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=El+Messiri:wght@500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;700&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  /* ألوان الشعار: النحاسي والرملي والبني */
+  --bg:#ffffff;
+  --surface:#ffffff;
+  --surface-2:#fffaf5;
+  --line:#ece5db;
+  --ink:#2a1f18;
+  --muted:#7d7167;
+  --clay:#c8703f;
+  --clay-text:#a85a2b;
+  --sand:#f5eee2;
+  --brown:#5d3b29;
+  --on-clay:#ffffff;
+  --kcal-bg:#f5eee2;
+  --kcal-ink:#7d6652;
+  --ok:#25d366;
+  --radius:12px;
+  --font-display:"El Messiri","IBM Plex Sans Arabic",sans-serif;
+  --font-body:"IBM Plex Sans Arabic",system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  font-family:var(--font-body);
+  background:var(--bg);
+  color:var(--ink);
+  min-height:100vh;
+  line-height:1.6;
+  padding-bottom:110px;
+  background-image:
+    radial-gradient(900px 500px at 85% -5%, rgba(173,90,38,.12), transparent 60%),
+    radial-gradient(700px 600px at 0% 40%, rgba(224,200,165,.45), transparent 65%);
+}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+:focus-visible{outline:2px solid var(--clay);outline-offset:3px;border-radius:6px}
+
+/* ---------- Hero ---------- */
+.hero{text-align:center;padding:42px 20px 26px;max-width:720px;margin:0 auto}
+.logo-mark{width:116px;height:auto;margin:0 auto 6px;display:block}
+.brand{font-family:var(--font-display);font-size:clamp(2.4rem,9vw,3.4rem);font-weight:700;line-height:1.15}
+.brand-en{font-size:.72rem;letter-spacing:.22em;color:var(--clay);margin-top:2px;direction:ltr}
+.hero h1{font-family:var(--font-display);font-weight:500;font-size:clamp(1.7rem,6vw,2.3rem);margin-top:26px}
+.hero p{color:var(--muted);margin-top:6px;font-size:.98rem}
+.branch-chip{
+  margin-top:18px;display:inline-flex;align-items:center;gap:8px;
+  border:1px solid var(--line);border-radius:999px;padding:8px 16px;font-size:.95rem;
+  background:rgba(255,250,243,.85);
+}
+.branch-chip b{color:var(--clay);font-weight:700}
+.branch-chip:hover{border-color:var(--clay)}
+
+/* ---------- Category nav ---------- */
+.cats{
+  position:sticky;top:0;z-index:20;
+  background:rgba(247,240,230,.92);backdrop-filter:blur(8px);
+  border-block:1px solid var(--line);
+}
+.cats-inner{
+  max-width:720px;margin:0 auto;display:flex;gap:8px;overflow-x:auto;
+  padding:10px 16px;scrollbar-width:none;
+}
+.cats-inner::-webkit-scrollbar{display:none}
+.cat-btn{
+  flex:none;padding:7px 18px;border:1px solid var(--line);border-radius:999px;
+  font-size:.95rem;color:var(--muted);white-space:nowrap;transition:.15s;
+}
+.cat-btn.active{background:var(--clay);border-color:var(--clay);color:var(--on-clay);font-weight:700}
+
+/* ---------- Menu ---------- */
+main{max-width:720px;margin:0 auto;padding:8px 16px}
+.section{padding-top:28px;scroll-margin-top:62px}
+.section h2{
+  font-family:var(--font-display);font-weight:700;font-size:1.5rem;
+  display:flex;align-items:center;gap:14px;margin-bottom:14px;
+}
+.section h2::after{content:"";flex:1;height:1px;background:var(--line)}
+.items{display:grid;gap:10px}
+.item{
+  display:grid;grid-template-columns:1fr auto;gap:6px 14px;align-items:center;
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+  padding:14px 16px;transition:border-color .15s, background .15s;
+}
+.item.in-cart{border-color:var(--clay);background:var(--surface-2)}
+.item-name{font-family:var(--font-display);font-size:1.28rem;font-weight:500;line-height:1.3}
+.item-meta{display:flex;align-items:center;gap:10px;margin-top:6px;flex-wrap:wrap}
+.kcal{
+  background:var(--kcal-bg);color:var(--kcal-ink);border-radius:7px;padding:1px 10px;
+  font-size:.82rem;direction:ltr;
+}
+.price{
+  background:var(--clay);color:var(--on-clay);border-radius:7px;padding:1px 12px;
+  font-weight:700;font-size:.95rem;
+}
+.add{
+  min-width:92px;height:42px;border-radius:10px;border:1px solid var(--clay);
+  color:var(--clay);font-weight:700;transition:.15s;
+}
+.add:hover{background:var(--clay);color:var(--on-clay)}
+.stepper{
+  display:none;align-items:center;height:42px;border-radius:10px;background:var(--clay);color:var(--on-clay);
+  min-width:92px;justify-content:space-between;
+}
+.item.in-cart .stepper{display:flex}
+.item.in-cart .add{display:none}
+.stepper button{width:38px;height:42px;font-size:1.3rem;font-weight:700;color:var(--on-clay)}
+.stepper span{font-weight:700;min-width:20px;text-align:center}
+
+/* ---------- Footer ---------- */
+footer{
+  max-width:720px;margin:36px auto 0;padding:22px 16px;border-top:1px solid var(--line);
+  display:grid;gap:18px;color:var(--muted);font-size:.93rem;
+}
+.branch-card{display:grid;gap:2px}
+.branch-card strong{color:var(--ink);font-family:var(--font-display);font-size:1.1rem;font-weight:500}
+.branch-card a{color:var(--clay);text-decoration:none;direction:ltr;text-align:right;width:max-content}
+.socials{display:flex;gap:18px;direction:ltr;justify-content:center;flex-wrap:wrap}
+.socials a{color:var(--ink);text-decoration:none;font-size:.95rem}
+.socials a:hover{color:var(--clay)}
+
+/* ---------- Cart bar ---------- */
+.cart-bar{
+  position:fixed;inset-inline:0;bottom:0;z-index:30;padding:12px 16px calc(12px + env(safe-area-inset-bottom));
+  background:linear-gradient(to top,var(--bg) 60%,transparent);pointer-events:none;
+  transform:translateY(120%);transition:transform .3s ease;
+}
+.cart-bar.show{transform:none}
+.cart-bar button{
+  pointer-events:auto;display:flex;width:100%;max-width:720px;margin:0 auto;
+  align-items:center;justify-content:space-between;
+  background:var(--clay);color:var(--on-clay);border-radius:14px;padding:14px 20px;
+  font-weight:700;font-size:1.05rem;box-shadow:0 8px 24px rgba(120,60,20,.28);
+}
+.cart-bar .count{
+  background:var(--ink);color:#fff;border-radius:999px;min-width:28px;height:28px;
+  display:inline-grid;place-items:center;font-size:.9rem;margin-inline-start:10px;
+}
+
+/* ---------- Sheet (cart + branch) ---------- */
+.overlay{
+  position:fixed;inset:0;z-index:50;background:rgba(43,29,20,.55);
+  display:none;align-items:flex-end;justify-content:center;
+}
+.overlay.open{display:flex}
+.sheet{
+  width:100%;max-width:560px;max-height:92vh;overflow-y:auto;
+  background:var(--surface);border:1px solid var(--line);border-bottom:0;
+  border-radius:20px 20px 0 0;padding:22px 20px calc(22px + env(safe-area-inset-bottom));
+  animation:rise .25s ease;
+}
+@keyframes rise{from{transform:translateY(40px);opacity:0}to{transform:none;opacity:1}}
+.sheet h3{font-family:var(--font-display);font-size:1.4rem;font-weight:700;margin-bottom:4px}
+.sheet .sub{color:var(--muted);font-size:.93rem;margin-bottom:16px}
+.branch-opt{
+  display:block;width:100%;text-align:right;border:1px solid var(--line);border-radius:var(--radius);
+  padding:14px 16px;margin-bottom:10px;background:var(--bg);transition:.15s;
+}
+.branch-opt:hover,.branch-opt.sel{border-color:var(--clay)}
+.branch-opt strong{display:block;font-family:var(--font-display);font-size:1.2rem;font-weight:500}
+.branch-opt span{color:var(--muted);font-size:.9rem}
+
+.cart-line{display:grid;grid-template-columns:1fr auto;gap:4px 12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}
+.cart-line .n{font-weight:700}
+.cart-line .p{color:var(--muted);font-size:.9rem}
+.mini{display:flex;align-items:center;gap:2px;border:1px solid var(--line);border-radius:9px}
+.mini button{width:34px;height:34px;font-size:1.15rem;color:var(--clay);font-weight:700}
+.mini span{min-width:22px;text-align:center;font-weight:700}
+.total{display:flex;justify-content:space-between;font-size:1.2rem;font-weight:700;padding:16px 0 6px}
+.total .v{color:var(--clay)}
+.field{display:grid;gap:5px;margin-top:12px}
+.field label{font-size:.9rem;color:var(--muted)}
+.field input,.field textarea{
+  font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);
+  border-radius:10px;padding:10px 12px;width:100%;
+}
+.field textarea{resize:vertical;min-height:70px}
+.send{
+  margin-top:18px;width:100%;height:52px;border-radius:12px;background:var(--ok);color:#06210f;
+  font-weight:700;font-size:1.08rem;display:flex;align-items:center;justify-content:center;gap:10px;
+}
+.send:disabled{opacity:.5;cursor:not-allowed}
+.ghost{margin-top:10px;width:100%;height:44px;color:var(--muted);border-radius:10px}
+.ghost:hover{color:var(--ink)}
+.empty{color:var(--muted);text-align:center;padding:26px 0}
+.note-branch{font-size:.9rem;color:var(--muted);margin-top:4px}
+.note-branch b{color:var(--clay)}
+
+
+/* ---------- White theme: logo colors used lightly ---------- */
+body{background:linear-gradient(#fbf7f0 0,#ffffff 360px);background-color:#fff}
+.brand-en{color:var(--clay-text)}
+.branch-chip{background:#fff;border-color:var(--line)}
+.branch-chip b{color:var(--clay-text)}
+.branch-chip:hover{border-color:var(--clay)}
+.cats{background:rgba(255,255,255,.94)}
+.cat-btn{border-color:var(--line)}
+.cat-btn.active{background:var(--sand);border-color:var(--clay);color:var(--brown);font-weight:700}
+.section h2{color:var(--brown)}
+.item{border-color:var(--line);box-shadow:0 1px 0 rgba(93,59,41,.03)}
+.item.in-cart{border-color:var(--clay);background:var(--surface-2)}
+.item-name{color:var(--ink)}
+.price{background:none;color:var(--clay-text);padding:0;border-radius:0;font-size:1.05rem}
+.kcal{background:var(--kcal-bg);color:var(--kcal-ink)}
+.add{border-color:var(--clay);color:var(--clay-text)}
+.add:hover{background:var(--clay-text);color:#fff}
+.stepper{background:var(--clay-text);color:#fff}
+.stepper button{color:#fff}
+.cart-bar{background:linear-gradient(to top,#fff 60%,transparent)}
+.cart-bar button{background:var(--brown);color:#fff;box-shadow:0 8px 24px rgba(93,59,41,.28)}
+.cart-bar .count{background:var(--clay);color:#fff}
+.sheet{background:#fff}
+.branch-opt{background:#fff}
+.branch-opt:hover,.branch-opt.sel{border-color:var(--clay);background:var(--surface-2)}
+.total .v{color:var(--clay-text)}
+.mini button{color:var(--clay-text)}
+.note-branch b{color:var(--clay-text)}
+.branch-card a{color:var(--clay-text)}
+.socials a{color:var(--brown)}
+.socials a:hover{color:var(--clay-text)}
+footer{border-top-color:var(--line)}
+
+@media (min-width:640px){
+  .overlay{align-items:center}
+  .sheet{border-radius:20px;border-bottom:1px solid var(--line)}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <svg class="logo-mark" viewBox="0 0 120 130" aria-hidden="true">
+    <defs>
+      <g id="skewer">
+        <line x1="0" y1="-8" x2="0" y2="120" stroke="#3a2619" stroke-width="2.2" stroke-linecap="round"/>
+        <polygon points="-15,6 12,0 15,24 -12,30" fill="#c8703f"/>
+        <polygon points="-12,30 15,24 17,48 -14,55" fill="#d9c9a3"/>
+        <polygon points="-14,55 17,48 14,74 -11,82" fill="#8a5a3a"/>
+        <polygon points="-11,82 14,74 9,98 -7,102" fill="#5d3b29"/>
+      </g>
+    </defs>
+    <use href="#skewer" transform="translate(24,8) rotate(-4)"/>
+    <use href="#skewer" transform="translate(60,0)"/>
+    <use href="#skewer" transform="translate(96,8) rotate(4)"/>
+  </svg>
+  <div class="brand">نكهة السيريه</div>
+  <div class="brand-en">SERIHA FLAVOR RESTAURANT</div>
+  <h1>قائمة الطعام</h1>
+  <p>اختر أصنافك وأرسل الطلب مباشرة إلى الفرع عبر واتساب</p>
+  <button class="branch-chip" id="branchChip" type="button" aria-label="تغيير الفرع">
+    الفرع: <b id="branchChipName">اختر الفرع</b>
+  </button>
+</header>
+
+<nav class="cats" aria-label="أقسام القائمة">
+  <div class="cats-inner" id="catNav"></div>
+</nav>
+
+<main id="menu"></main>
+
+<footer>
+  <div id="branchesFooter"></div>
+  <div class="socials">
+    <a href="https://www.tiktok.com/@serihflavor" target="_blank" rel="noopener">TikTok · serihflavor</a>
+    <a href="https://www.instagram.com/serih_flavor" target="_blank" rel="noopener">Instagram · serih_flavor</a>
+  </div>
+</footer>
+
+<!-- Cart bar -->
+<div class="cart-bar" id="cartBar">
+  <button type="button" id="openCart">
+    <span>عرض السلة <span class="count" id="cartCount">0</span></span>
+    <span id="cartTotalBar">0 ر.س</span>
+  </button>
+</div>
+
+<!-- Branch picker -->
+<div class="overlay" id="branchOverlay" role="dialog" aria-modal="true" aria-labelledby="bt">
+  <div class="sheet">
+    <h3 id="bt">اختر الفرع</h3>
+    <p class="sub">يصل طلبك على واتساب الفرع الذي تختاره.</p>
+    <div id="branchOptions"></div>
+  </div>
+</div>
+
+<!-- Cart -->
+<div class="overlay" id="cartOverlay" role="dialog" aria-modal="true" aria-labelledby="ct">
+  <div class="sheet">
+    <h3 id="ct">سلة الطلب</h3>
+    <p class="note-branch">الفرع: <b id="cartBranch"></b></p>
+    <div id="cartLines"></div>
+    <div id="cartForm">
+      <div class="total"><span>الإجمالي</span><span class="v" id="cartTotal">0 ر.س</span></div>
+      <div class="field">
+        <label for="custName">الاسم (اختياري)</label>
+        <input id="custName" type="text" autocomplete="name">
+      </div>
+      <div class="field">
+        <label for="custNote">ملاحظات على الطلب (اختياري)</label>
+        <textarea id="custNote" placeholder="مثال: بدون بصل"></textarea>
+      </div>
+      <button class="send" id="sendBtn" type="button">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.5 3.5A11.8 11.8 0 0 0 12 0C5.4 0 .1 5.3.1 11.9c0 2.1.5 4.1 1.6 5.9L0 24l6.4-1.7a11.9 11.9 0 0 0 5.6 1.4h.1c6.6 0 11.9-5.3 11.9-11.9 0-3.2-1.2-6.2-3.5-8.3zM12 21.7c-1.8 0-3.5-.5-5-1.4l-.4-.2-3.8 1 1-3.7-.2-.4a9.8 9.8 0 0 1-1.5-5.1C2.1 6.5 6.5 2.1 12 2.1c2.6 0 5.1 1 6.9 2.9a9.7 9.7 0 0 1 2.9 6.9c0 5.4-4.4 9.8-9.8 9.8zm5.4-7.3c-.3-.1-1.8-.9-2-1-.3-.1-.5-.1-.7.1l-1 1.2c-.2.2-.4.2-.7.1-.3-.1-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6l.5-.5c.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5l-.9-2.2c-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.1.2 2.100 3.200 5.100 4.500.7.3 1.300.5 1.700.6.7.2 1.400.2 1.900.1.600-.1 1.800-.7 2-1.400.3-.7.3-1.300.2-1.400-.1-.1-.3-.2-.6-.3z"/></svg>
+        إرسال الطلب عبر واتساب
+      </button>
+      <button class="ghost" id="clearBtn" type="button">تفريغ السلة</button>
+    </div>
+    <button class="ghost" id="closeCart" type="button">متابعة التصفح</button>
+  </div>
+</div>
+
+<script>
+/* =====================================================
+   الإعدادات — عدّل هنا فقط
+   ===================================================== */
+
+// أرقام الواتساب بالصيغة الدولية بدون + أو أصفار (966 + الرقم بدون الصفر)
+// تأكد من ربط كل رقم بالفرع الصحيح
+const BRANCHES = [
+  {
+    id: "jeddah",
+    name: "جدة",
+    address: "حي التيسير | شارع حي بن ثعلبة",
+    phoneDisplay: "0548606265",
+    whatsapp: "966548606265"
+  },
+  {
+    id: "jazan",
+    name: "جازان",
+    address: "البلد - حي الشامية",
+    phoneDisplay: "0535483854",
+    whatsapp: "966535483854"
+  }
+];
+
+const CURRENCY = "ر.س";
+
+// لإضافة صنف جديد: أضف سطراً جديداً داخل القسم المناسب (id يجب أن يكون فريداً)
+const MENU = [
+  { cat: "السيريه", items: [
+    { id: "s-meat",    name: "سيريه لحم",   kcal: 429, price: 16 },
+    { id: "s-chicken", name: "سيريه دجاج",  kcal: 250, price: 16 },
+    { id: "s-fish",    name: "سيريه سمك",   kcal: 427, price: 18 }
+  ]},
+  { cat: "المدفون", items: [
+    { id: "m-meat",    name: "مدفون لحم",   kcal: 553, price: 19 },
+    { id: "m-chicken", name: "مدفون دجاج",  kcal: 414, price: 19 }
+  ]},
+  { cat: "الأطباق الخاصة", items: [
+    { id: "tajin",     name: "سيريه طاجن",  kcal: 788, price: 25 },
+    { id: "shayah",    name: "لحم شيه",     kcal: 481, price: 30 }
+  ]},
+  { cat: "العصائر", items: [
+    { id: "j-ji",      name: "عصير جي",     kcal: 140, price: 5 },
+    { id: "j-karkade", name: "عصير كركديه", kcal: 310, price: 5 }
+  ]},
+  { cat: "الإضافات", items: [
+    { id: "x-cheese",  name: "إضافة جبنة",  kcal: 187, price: 2 },
+    { id: "x-mix",     name: "خلطة زبادي",  kcal: 60,  price: 2 },
+    { id: "x-yogurt",  name: "زبادي",       kcal: 120, price: 3 }
+  ]}
+];
+
+/* =====================================================
+   المنطق
+   ===================================================== */
+const $ = (s) => document.querySelector(s);
+const ALL = MENU.flatMap(c => c.items);
+const byId = Object.fromEntries(ALL.map(i => [i.id, i]));
+
+let cart = {};
+let branchId = null;
+try { branchId = localStorage.getItem("seriha_branch"); } catch(e){}
+if (!BRANCHES.some(b => b.id === branchId)) branchId = null;
+
+const branch = () => BRANCHES.find(b => b.id === branchId);
+const fmt = (n) => `${n} ${CURRENCY}`;
+const totals = () => {
+  let count = 0, sum = 0;
+  for (const [id, q] of Object.entries(cart)) { count += q; sum += q * byId[id].price; }
+  return { count, sum };
+};
+
+/* ---- render menu ---- */
+function renderMenu(){
+  $("#catNav").innerHTML = MENU.map((c,i) =>
+    `<button class="cat-btn${i===0?" active":""}" type="button" data-target="sec-${i}">${c.cat}</button>`).join("");
+
+  $("#menu").innerHTML = MENU.map((c,i) => `
+    <section class="section" id="sec-${i}">
+      <h2>${c.cat}</h2>
+      <div class="items">
+        ${c.items.map(it => `
+          <article class="item" data-id="${it.id}">
+            <div>
+              <div class="item-name">${it.name}</div>
+              <div class="item-meta">
+                <span class="price">${fmt(it.price)}</span>
+                <span class="kcal">${it.kcal} kcal</span>
+              </div>
+            </div>
+            <div>
+              <button class="add" type="button" data-act="inc" aria-label="أضف ${it.name}">إضافة</button>
+              <div class="stepper">
+                <button type="button" data-act="inc" aria-label="زيادة ${it.name}">+</button>
+                <span data-qty>0</span>
+                <button type="button" data-act="dec" aria-label="إنقاص ${it.name}">−</button>
+              </div>
+            </div>
+          </article>`).join("")}
+      </div>
+    </section>`).join("");
+
+  $("#branchesFooter").innerHTML = BRANCHES.map(b => `
+    <div class="branch-card">
+      <strong>فرع ${b.name}</strong>
+      <span>${b.address}</span>
+      <a href="tel:+${b.whatsapp}">${b.phoneDisplay}</a>
+    </div>`).join("");
+}
+
+/* ---- cart state ---- */
+function change(id, d){
+  const q = Math.max(0, (cart[id] || 0) + d);
+  if (q === 0) delete cart[id]; else cart[id] = q;
+  sync();
+}
+
+function sync(){
+  document.querySelectorAll(".item").forEach(el => {
+    const q = cart[el.dataset.id] || 0;
+    el.classList.toggle("in-cart", q > 0);
+    el.querySelector("[data-qty]").textContent = q;
+  });
+  const { count, sum } = totals();
+  $("#cartCount").textContent = count;
+  $("#cartTotalBar").textContent = fmt(sum);
+  $("#cartBar").classList.toggle("show", count > 0);
+  if ($("#cartOverlay").classList.contains("open")) renderCart();
+}
+
+function renderCart(){
+  const { count, sum } = totals();
+  const b = branch();
+  $("#cartBranch").textContent = b ? b.name : "—";
+  $("#cartTotal").textContent = fmt(sum);
+  $("#cartForm").style.display = count ? "" : "none";
+  $("#cartLines").innerHTML = count ? Object.entries(cart).map(([id,q]) => {
+    const it = byId[id];
+    return `
+      <div class="cart-line">
+        <div><div class="n">${it.name}</div><div class="p">${fmt(it.price)} × ${q} = ${fmt(it.price*q)}</div></div>
+        <div class="mini">
+          <button type="button" data-cart="${id}" data-d="1" aria-label="زيادة ${it.name}">+</button>
+          <span>${q}</span>
+          <button type="button" data-cart="${id}" data-d="-1" aria-label="إنقاص ${it.name}">−</button>
+        </div>
+      </div>`;
+  }).join("") : `<div class="empty">السلة فارغة. أضف أصنافاً من القائمة.</div>`;
+}
+
+/* ---- overlays ---- */
+function open(el){ el.classList.add("open"); document.body.style.overflow = "hidden"; }
+function close(el){ el.classList.remove("open"); if(!document.querySelector(".overlay.open")) document.body.style.overflow = ""; }
+
+function renderBranchOptions(){
+  $("#branchOptions").innerHTML = BRANCHES.map(b => `
+    <button class="branch-opt${b.id===branchId?" sel":""}" type="button" data-branch="${b.id}">
+      <strong>فرع ${b.name}</strong><span>${b.address}</span>
+    </button>`).join("");
+}
+function setBranch(id){
+  branchId = id;
+  try { localStorage.setItem("seriha_branch", id); } catch(e){}
+  $("#branchChipName").textContent = branch().name;
+  close($("#branchOverlay"));
+  if ($("#cartOverlay").classList.contains("open")) renderCart();
+}
+
+/* ---- WhatsApp ---- */
+function sendOrder(){
+  const b = branch();
+  if (!b) { renderBranchOptions(); open($("#branchOverlay")); return; }
+  const { sum } = totals();
+  const name = $("#custName").value.trim();
+  const note = $("#custNote").value.trim();
+
+  const lines = Object.entries(cart).map(([id,q]) => {
+    const it = byId[id];
+    return `• ${q} × ${it.name} = ${fmt(it.price*q)}`;
+  });
+
+  const msg = [
+    `*طلب جديد - نكهة السيريه*`,
+    `الفرع: ${b.name}`,
+    name ? `الاسم: ${name}` : null,
+    ``,
+    ...lines,
+    ``,
+    `*الإجمالي: ${fmt(sum)}*`,
+    note ? `\nملاحظات: ${note}` : null
+  ].filter(x => x !== null).join("\n");
+
+  window.open(`https://wa.me/${b.whatsapp}?text=${encodeURIComponent(msg)}`, "_blank", "noopener");
+}
+
+/* ---- events ---- */
+document.addEventListener("click", (e) => {
+  const t = e.target.closest("button");
+  if (!t) return;
+
+  if (t.dataset.act) {
+    const id = t.closest(".item").dataset.id;
+    change(id, t.dataset.act === "inc" ? 1 : -1);
+  } else if (t.dataset.cart) {
+    change(t.dataset.cart, Number(t.dataset.d));
+  } else if (t.dataset.branch) {
+    setBranch(t.dataset.branch);
+  } else if (t.dataset.target) {
+    document.getElementById(t.dataset.target).scrollIntoView({ behavior: "smooth" });
+  }
+});
+
+$("#branchChip").addEventListener("click", () => { renderBranchOptions(); open($("#branchOverlay")); });
+$("#openCart").addEventListener("click", () => {
+  if (!branch()) { renderBranchOptions(); open($("#branchOverlay")); return; }
+  renderCart(); open($("#cartOverlay"));
+});
+$("#closeCart").addEventListener("click", () => close($("#cartOverlay")));
+$("#clearBtn").addEventListener("click", () => { cart = {}; sync(); renderCart(); });
+$("#sendBtn").addEventListener("click", sendOrder);
+document.querySelectorAll(".overlay").forEach(o => o.addEventListener("click", (e) => {
+  if (e.target === o && (o.id === "cartOverlay" || branch())) close(o);
+}));
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") document.querySelectorAll(".overlay.open").forEach(o => { if (o.id === "cartOverlay" || branch()) close(o); });
+});
+
+/* highlight active category while scrolling */
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(en => {
+    if (en.isIntersecting) {
+      document.querySelectorAll(".cat-btn").forEach(b => b.classList.toggle("active", b.dataset.target === en.target.id));
+      const a = document.querySelector(".cat-btn.active");
+      if (a) a.scrollIntoView({ inline: "center", block: "nearest" });
+    }
+  });
+}, { rootMargin: "-30% 0px -60% 0px" });
+
+/* init */
+renderMenu();
+document.querySelectorAll(".section").forEach(s => io.observe(s));
+if (branch()) $("#branchChipName").textContent = branch().name;
+else { renderBranchOptions(); open($("#branchOverlay")); }
+sync();
+</script>
+</body>
+</html>
